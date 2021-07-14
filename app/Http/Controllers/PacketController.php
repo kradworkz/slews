@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DeviceData;
 use Illuminate\Http\Request;
 use App\Events\PacketReceiver;
+use App\Http\Resources\DefaultResource;
 
 class PacketController extends Controller
 {
@@ -21,19 +22,22 @@ class PacketController extends Controller
         $aa = \json_decode($a);
 
         $wew = new DeviceData;
-        $wew->code = $tracker_id;
-        $wew->accelerometer = $aa->Accelerometer;
-        $wew->gyro = $aa->Gyro;
-        $wew->soilmoisture = $aa->SoilMoisture;
-        $wew->temperature = $aa->Temperature;
+        $wew->code = $json;
+        // $wew->accelerometer = $aa->Accelerometer;
+        // $wew->gyro = $aa->Gyro;
+        // $wew->soilmoisture = $aa->SoilMoisture;
+        // $wew->temperature = $aa->Temperature;
         $wew->save();
 
         if($wew->save()){
-            broadcast(new PacketReceiver($wew));
+            // broadcast(new PacketReceiver($wew));
 
-            return 'success';
+            // return 'success';    
         }
+    }
 
-
+    public function packets(){
+        $data = DeviceData::all();
+        return DefaultResource::collection($data);
     }
 }

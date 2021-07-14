@@ -1915,6 +1915,56 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -1928,36 +1978,58 @@ __webpack_require__.r(__webpack_exports__);
       packets: [],
       chartOptions: {
         chart: {
-          type: "line",
-          stacked: !0,
-          toolbar: {
-            show: !1
-          },
+          id: 'area-datetime',
+          type: 'area',
+          height: 350,
           zoom: {
-            enabled: !0
+            autoScaleYaxis: true
           }
         },
-        plotOptions: {
-          bar: {
-            horizontal: !1,
-            columnWidth: "25%",
-            endingShape: "rounded"
-          }
+        dataLabels: {
+          enabled: false
+        },
+        markers: {
+          size: 0,
+          style: 'hollow'
         },
         xaxis: {
-          type: 'datetime'
+          type: 'datetime',
+          min: new Date('01 May 2021').getTime(),
+          tickAmount: 6
         },
-        legend: {
-          position: 'bottom'
+        tooltip: {
+          x: {
+            format: 'dd MMM yyyy'
+          }
+        },
+        stroke: {
+          width: 1.5
         },
         fill: {
-          opacity: 1
+          type: 'gradient',
+          gradient: {
+            shadeIntensity: 1,
+            opacityFrom: 0.7,
+            opacityTo: 0.9,
+            stops: [0, 100]
+          }
         }
-      }
+      },
+      selection: 'todayss',
+      year: new Date().getFullYear(),
+      month: '',
+      week: '',
+      showyear: false,
+      showmonth: false,
+      showweek: false,
+      type: 'Monthly'
     };
   },
   created: function created() {
     this.listenForNewEvent();
+    this.fetch();
+    var d = new Date();
+    d.setHours(d.getHours() - 2);
   },
   methods: {
     listenForNewEvent: function listenForNewEvent() {
@@ -1967,8 +2039,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.$parent["new"](datas);
 
         var x = datas.time;
-        var y = datas.gyro;
-        _this.series[0].data.length > 20 ? _this.series[0].data.splice(0, 1) : '';
+        var y = datas.gyro; // (this.series[0].data.length > 50) ? this.series[0].data.splice(0, 1) : '';
 
         _this.series[0].data.push({
           x: x,
@@ -1982,6 +2053,44 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.packets.updateSeries([{
         data: this.series[0].data
       }], false, true);
+    },
+    fetch: function fetch() {
+      var _this2 = this;
+
+      axios.get(this.currentUrl + '/api/packets').then(function (response) {
+        _this2.series[0].data = response.data.data;
+
+        _this2.updateSeriesLine();
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
+    updateData: function updateData(timeline) {
+      this.selection = timeline;
+
+      switch (timeline) {
+        case 'todayss':
+          this.$refs.packets.zoomX(new Date('1 May 2021').getTime(), new Date('31 May 2021').getTime());
+          break;
+
+        case 'six_months':
+          this.$refs.packets.zoomX(new Date('27 Sep 2012').getTime(), new Date('27 Feb 2013').getTime());
+          break;
+
+        case 'one_year':
+          this.$refs.packets.zoomX(new Date('1 Jan ' + this.year).getTime(), new Date('1 Jan ' + parseInt(this.year + 1)).getTime());
+          break;
+
+        case 'ytd':
+          this.$refs.packets.zoomX(new Date('01 Jan 2013').getTime(), new Date('27 Feb 2013').getTime());
+          break;
+
+        case 'all':
+          this.$refs.packets.zoomX(new Date('23 Jan 2012').getTime(), new Date('27 Feb 2013').getTime());
+          break;
+
+        default:
+      }
     }
   },
   components: {
@@ -2002,12 +2111,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -48495,25 +48598,212 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      { attrs: { id: "chart" } },
-      [
-        _c("apexchart", {
-          ref: "packets",
-          attrs: {
-            height: "500",
-            options: _vm.chartOptions,
-            series: _vm.series
-          }
-        })
-      ],
-      1
-    )
-  ])
+  return _c(
+    "div",
+    { attrs: { id: "chart" } },
+    [
+      _c("div", { staticClass: "float-left" }, [
+        _c("div", { staticClass: "input-group input-group-sm" }, [
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.type,
+                  expression: "type"
+                }
+              ],
+              staticClass: "custom-select custom-select-sm ml-2",
+              staticStyle: { width: "100px" },
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.type = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
+              }
+            },
+            [
+              _c("option", { attrs: { value: "All" } }, [_vm._v("All")]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "Daily" } }, [_vm._v("Daily")]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "Monthly" } }, [
+                _vm._v("Monthly")
+              ]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "Yearly" } }, [_vm._v("Yearly")])
+            ]
+          ),
+          _vm._v(" "),
+          _vm.month == "Daily"
+            ? _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.todate,
+                    expression: "todate"
+                  }
+                ],
+                staticClass: "custom-select custom-select-sm",
+                staticStyle: {
+                  "margin-right": "10px",
+                  "margin-left": "10px",
+                  width: "100px"
+                },
+                attrs: { type: "date" },
+                domProps: { value: _vm.todate },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.todate = $event.target.value
+                  }
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.type == "Yearly"
+            ? _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.year,
+                    expression: "year"
+                  }
+                ],
+                staticClass: "custom-select custom-select-sm",
+                staticStyle: {
+                  "margin-right": "10px",
+                  "margin-left": "10px",
+                  width: "100px"
+                },
+                attrs: { type: "text" },
+                domProps: { value: _vm.year },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.year = $event.target.value
+                  }
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _c("select", {
+            staticClass: "custom-select custom-select-sm",
+            staticStyle: { width: "200px" }
+          }),
+          _vm._v(" "),
+          _vm._m(0)
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "toolbar" }, [
+        _c(
+          "button",
+          {
+            class: { active: _vm.selection === "one_month" },
+            attrs: { id: "one_month" },
+            on: {
+              click: function($event) {
+                return _vm.updateData("one_month")
+              }
+            }
+          },
+          [_vm._v("\n            1M\n        ")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            class: { active: _vm.selection === "six_months" },
+            attrs: { id: "six_months" },
+            on: {
+              click: function($event) {
+                return _vm.updateData("six_months")
+              }
+            }
+          },
+          [_vm._v("\n            6M\n        ")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            class: { active: _vm.selection === "one_year" },
+            attrs: { id: "one_year" },
+            on: {
+              click: function($event) {
+                return _vm.updateData("one_year")
+              }
+            }
+          },
+          [_vm._v("\n            1Y\n        ")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            class: { active: _vm.selection === "ytd" },
+            attrs: { id: "ytd" },
+            on: {
+              click: function($event) {
+                return _vm.updateData("ytd")
+              }
+            }
+          },
+          [_vm._v("\n            YTD\n        ")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            class: { active: _vm.selection === "all" },
+            attrs: { id: "all" },
+            on: {
+              click: function($event) {
+                return _vm.updateData("all")
+              }
+            }
+          },
+          [_vm._v("\n            ALL\n        ")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("apexchart", {
+        ref: "packets",
+        staticClass: "mt-4",
+        attrs: { height: "240", options: _vm.chartOptions, series: _vm.series }
+      })
+    ],
+    1
+  )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c("label", { staticClass: "input-group-text" }, [_vm._v("Services")])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -48538,134 +48828,94 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    [
-      _vm._m(0),
-      _vm._v(" "),
-      _vm._l(_vm.packets, function(list, index) {
-        return _c(
-          "div",
-          { key: list.id, staticClass: "chat-leftsidebar-nav" },
-          [
-            _c("div", { staticClass: "mt-2" }, [
-              _c("div", { staticClass: "card border shadow-none mb-2" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "text-body",
-                    attrs: { href: "javascript: void(0);" }
-                  },
-                  [
-                    _c("div", { staticClass: "p-2" }, [
-                      _c("div", { staticClass: "row" }, [
-                        _c("div", { staticClass: "col-md-12 mb-2" }, [
-                          _c(
-                            "p",
-                            { staticClass: "text-muted text-truncate mb-0" },
-                            [
-                              _c("span", { staticClass: "font-size-11" }, [
-                                _vm._v("Date: " + _vm._s(list.time))
-                              ])
-                            ]
-                          )
-                        ]),
+    _vm._l(_vm.packets, function(list, index) {
+      return _c("div", { key: list.id, staticClass: "chat-leftsidebar-nav" }, [
+        _c("div", { staticClass: "mt-2" }, [
+          _c("div", { staticClass: "card border shadow-none mb-2" }, [
+            _c(
+              "a",
+              {
+                staticClass: "text-body",
+                attrs: { href: "javascript: void(0);" }
+              },
+              [
+                _c("div", { staticClass: "p-2" }, [
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-md-12 mb-2" }, [
+                      _c(
+                        "p",
+                        { staticClass: "text-muted text-truncate mb-0" },
+                        [
+                          _c("span", { staticClass: "font-size-11" }, [
+                            _vm._v("Date: " + _vm._s(list.time))
+                          ])
+                        ]
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-6" }, [
+                      _c("div", { staticClass: "overflow-hidden mr-auto" }, [
+                        _c(
+                          "p",
+                          { staticClass: "text-muted text-truncate mb-0" },
+                          [
+                            _c("span", { staticClass: "font-size-10" }, [
+                              _vm._v("Accelerometer:")
+                            ]),
+                            _vm._v(" " + _vm._s(list.accelerometer))
+                          ]
+                        ),
                         _vm._v(" "),
-                        _c("div", { staticClass: "col-md-6" }, [
-                          _c(
-                            "div",
-                            { staticClass: "overflow-hidden mr-auto" },
-                            [
-                              _c(
-                                "p",
-                                {
-                                  staticClass: "text-muted text-truncate mb-0"
-                                },
-                                [
-                                  _c("span", { staticClass: "font-size-10" }, [
-                                    _vm._v("Accelerometer:")
-                                  ]),
-                                  _vm._v(" " + _vm._s(list.accelerometer))
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "p",
-                                {
-                                  staticClass: "text-muted text-truncate mb-0"
-                                },
-                                [
-                                  _c("span", { staticClass: "font-size-10" }, [
-                                    _vm._v("Gyro:")
-                                  ]),
-                                  _vm._v(" " + _vm._s(list.gyro))
-                                ]
-                              )
-                            ]
-                          )
-                        ]),
+                        _c(
+                          "p",
+                          { staticClass: "text-muted text-truncate mb-0" },
+                          [
+                            _c("span", { staticClass: "font-size-10" }, [
+                              _vm._v("Gyro:")
+                            ]),
+                            _vm._v(" " + _vm._s(list.gyro))
+                          ]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-6" }, [
+                      _c("div", { staticClass: "overflow-hidden mr-auto" }, [
+                        _c(
+                          "p",
+                          { staticClass: "text-muted text-truncate mb-0" },
+                          [
+                            _c("span", { staticClass: "font-size-10" }, [
+                              _vm._v("SoilMoisture:")
+                            ]),
+                            _vm._v(" " + _vm._s(list.soilmoisture))
+                          ]
+                        ),
                         _vm._v(" "),
-                        _c("div", { staticClass: "col-md-6" }, [
-                          _c(
-                            "div",
-                            { staticClass: "overflow-hidden mr-auto" },
-                            [
-                              _c(
-                                "p",
-                                {
-                                  staticClass: "text-muted text-truncate mb-0"
-                                },
-                                [
-                                  _c("span", { staticClass: "font-size-10" }, [
-                                    _vm._v("SoilMoisture:")
-                                  ]),
-                                  _vm._v(" " + _vm._s(list.soilmoisture))
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "p",
-                                {
-                                  staticClass: "text-muted text-truncate mb-0"
-                                },
-                                [
-                                  _c("span", { staticClass: "font-size-10" }, [
-                                    _vm._v("Temperature:")
-                                  ]),
-                                  _vm._v(" " + _vm._s(list.temperature))
-                                ]
-                              )
-                            ]
-                          )
-                        ])
+                        _c(
+                          "p",
+                          { staticClass: "text-muted text-truncate mb-0" },
+                          [
+                            _c("span", { staticClass: "font-size-10" }, [
+                              _vm._v("Temperature:")
+                            ]),
+                            _vm._v(" " + _vm._s(list.temperature))
+                          ]
+                        )
                       ])
                     ])
-                  ]
-                )
-              ])
-            ])
-          ]
-        )
-      })
-    ],
-    2
+                  ])
+                ])
+              ]
+            )
+          ])
+        ])
+      ])
+    }),
+    0
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "search-box chat-search-box py-4" }, [
-      _c("div", { staticClass: "position-relative" }, [
-        _c("input", {
-          staticClass: "form-control",
-          attrs: { type: "text", placeholder: "Search..." }
-        }),
-        _vm._v(" "),
-        _c("i", { staticClass: "bx bx-search-alt search-icon" })
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

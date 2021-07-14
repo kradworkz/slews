@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/chirpstack', 'PacketController@index');
+Route::get('/packets', 'PacketController@packets');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

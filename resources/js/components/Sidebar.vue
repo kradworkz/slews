@@ -1,11 +1,5 @@
 <template>
 <div>
-    <div class="search-box chat-search-box py-4">
-        <div class="position-relative">
-            <input type="text" class="form-control" placeholder="Search...">
-        <i class="bx bx-search-alt search-icon"></i>
-        </div>
-    </div>
 
     <div class="chat-leftsidebar-nav" v-for="(list,index) in packets" v-bind:key="list.id">
         <div class="mt-2">
