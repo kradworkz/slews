@@ -16,11 +16,11 @@ class CreateDeviceDataTable extends Migration
         Schema::create('device_data', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('id');
-            $table->string('code',50);
-            $table->decimal('accelerometer', 5, 2);
-            $table->decimal('gyro', 5, 2);
-            $table->decimal('soilmoisture', 5, 2);
-            $table->decimal('temperature', 5, 2);
+            $table->longText('code')->default();
+            $table->decimal('accelerometer', 5, 2)->default();
+            $table->decimal('gyro', 5, 2)->default();
+            $table->decimal('soilmoisture', 5, 2)->default();
+            $table->decimal('temperature', 5, 2)->default();
             $table->timestamps();
         });
     }
