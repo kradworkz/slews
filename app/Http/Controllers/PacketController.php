@@ -13,13 +13,13 @@ class PacketController extends Controller
         header("Content-type: application/json");
         $json = file_get_contents("php://input");
 
-        $obj = json_decode($json);
-        $binary = base64_decode($obj->devEUI);
-        $devicename = $obj->deviceName;
-        $tracker_id = bin2hex($binary);
-        $decoded = json_encode($obj->objectJSON);
-        $a = \json_decode($decoded);
-        $aa = \json_decode($a);
+        // $obj = json_decode($json);
+        // $binary = base64_decode($obj->devEUI);
+        // $devicename = $obj->deviceName;
+        // $tracker_id = bin2hex($binary);
+        // $decoded = json_encode($obj->objectJSON);
+        // $a = \json_decode($decoded);
+        // $aa = \json_decode($a);
 
         $wew = new DeviceData;
         $wew->code = $json;
