@@ -27,12 +27,12 @@ class PacketController extends Controller
         // $wew->gyro = $aa->Gyro;
         // $wew->soilmoisture = $aa->SoilMoisture;
         // $wew->temperature = $aa->Temperature;
-        $wew->save();
+        // $wew->save();
 
         if($wew->save()){
             // broadcast(new PacketReceiver($wew));
 
-            // return 'success';    
+            return 'success';    
         }
     }
 
