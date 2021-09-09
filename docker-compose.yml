@@ -58,7 +58,7 @@ services:
 
 #Docker Networks
 networks:
-  app-network:
+  slews-app-network:
     driver: bridge
 volumes:
   dbdata:
