@@ -7,7 +7,7 @@ COPY composer.lock composer.json /var/www/
 WORKDIR /var/www
 
 # Install dependencies
-RUN apk add --update && apt-get install -y \
+RUN apk add --update && apk add install -y \
     build-essential \
     libpng-dev \
     libzip-dev \
