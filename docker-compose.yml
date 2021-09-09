@@ -39,7 +39,7 @@ services:
 
   #MySQL Service
   db:
-    image: mysql:5.7.22
+    image: mysql:5.7.29
     container_name: slews-db
     restart: unless-stopped
     tty: true
