@@ -22,7 +22,7 @@ RUN apk add --update && apt-get install -y \
     curl
 
 # Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apk add clean && rm -rf /var/lib/apt/lists/*
 
 # Install extensions
 RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl
